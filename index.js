@@ -33,9 +33,18 @@ handler.on('push', (event) => {
   // 项目名以及分支判断
   const project = event.payload.repository.name;
   const ref = event.payload.ref;
+  // 获取提交信息
+  const commits = event.payload.commits;
+  // 判断package.json是否更改  added modified removed
+  const files = commits
+    .map((commit) =>
+      commit.added.concat(commit.modified).concat(commit.removed)
+    )
+    .flat();
+  const isPackageJson = files.includes('package.json');
   if (ref === 'refs/heads/main') {
     console.log(`开始执行${project}的脚本`);
-    run_cmd('sh', [`./scripts/${project}.sh`], (text) => {
+    run_cmd('sh', [`./scripts/${project}.sh`, isPackageJson], (text) => {
       console.log(text);
     });
   }
