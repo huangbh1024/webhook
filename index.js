@@ -3,14 +3,12 @@ const createHandler = require('github-webhook-handler');
 const handler = createHandler({ path: '/webhook', secret: '19741975m' });
 
 const run_cmd = (cmd, args, callback) => {
-  const spawn = require('child_process').spawn;
+  const { spawn } = require('child_process');
   const child = spawn(cmd, args);
-  let resp = '';
-  child.stdout.on('data', (buffer) => {
-    resp += buffer.toString();
-  });
-  child.stdout.on('end', () => {
-    callback(resp);
+  child.stdout.pipe(process.stdout);
+  child.stderr.pipe(process.stderr);
+  child.on('close', (code) => {
+    callback(code);
   });
 };
 
