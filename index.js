@@ -8,6 +8,7 @@ const {
   run_pull,
   run_build,
   run_pm2,
+  run_cmd,
 } = require('./utils/index.js');
 
 http
@@ -57,6 +58,20 @@ handler.on('push', async (event) => {
     // 执行build
     console.log('开始执行build脚本');
     await run_build(`/home/${projectName}`, version);
+    // 判断scripts文件夹内时候有对应项目的脚本
+    const scriptsFiles = await read_dir('./scripts');
+    const scripts = scriptsFiles.map((file) => {
+      const fileName = file.split('.')[0];
+      const fileSuffix = file.split('.')[1];
+      return [fileName, fileSuffix];
+    });
+    const isHasScript = scripts.find((script) => script[0] === projectName);
+    if (isHasScript) {
+      const shellMap = { js: 'node', sh: 'sh' };
+      const shell = shellMap[isHasScript[1]];
+      console.log('开始执行scripts脚本');
+      await run_cmd(shell, [`./scripts/${projectName}.${isHasScript[1]}`]);
+    }
     // 执行pm2
     console.log('开始执行pm2脚本');
     await run_pm2(projectName);

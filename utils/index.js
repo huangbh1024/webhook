@@ -1,12 +1,15 @@
 const { spawn } = require('child_process');
 const { readdir } = require('fs');
 
-const run_cmd = (cmd, args, callback) => {
+const run_cmd = (cmd, args) => {
   const child = spawn(cmd, args);
-  child.stdout.pipe(process.stdout);
-  child.stderr.pipe(process.stderr);
-  child.on('close', (code) => {
-    callback(code);
+  return new Promise((resolve) => {
+    child.stdout.pipe(process.stdout);
+    child.stderr.pipe(process.stderr);
+    child.on('close', (code) => {
+      console.log(`run ${cmd} ${args} success`);
+      resolve();
+    });
   });
 };
 
