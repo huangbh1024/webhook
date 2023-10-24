@@ -34,7 +34,7 @@ const upload = (path, key) => {
   );
 };
 
-const basePath = '/home/blog-client-new/.output/public/_nuxt';
+const basePath = '/www/wwwroot/blog.huangbh.cn/.output/public/_nuxt';
 const fs = require('fs');
 const main = (path) => {
   const files = fs.readdirSync(path);

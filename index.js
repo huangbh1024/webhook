@@ -11,6 +11,12 @@ const {
   run_cmd,
 } = require('./utils/index.js');
 
+const dirUrlMap = {
+  'blog-nuxt-v2': '/www/wwwroot/blog.huangbh.cn',
+  'blog-server-v2': '/www/wwwroot/api.huangbh.cn',
+  webhook: '/home/webhook',
+};
+
 http
   .createServer((req, res) => {
     handler(req, res, (err) => {
@@ -39,25 +45,25 @@ handler.on('push', async (event) => {
   const isPackageJson = files.includes('package.json');
   if (ref === 'refs/heads/main') {
     // 执行git pull
-    await run_pull(`/home/${projectName}`);
+    await run_pull(dirUrlMap[projectName]);
     const versionMap = {
       'yarn.lock': 'yarn',
       'pnpm-lock.yaml': 'pnpm',
       'package-lock.json': 'npm',
     };
-    const dirFiles = await read_dir(`/home/${projectName}`);
+    const dirFiles = await read_dir(dirUrlMap[projectName]);
     const file = dirFiles.find((file) => versionMap[file]);
     const version = versionMap[file];
     if (isPackageJson) {
       // 读取当前项目的目录
       console.log('开始执行install脚本');
-      await run_install(`/home/${projectName}`, version);
+      await run_install(dirUrlMap[projectName], version);
     } else {
       console.log('package.json文件未修改，不执行install脚本');
     }
     // 执行build
     console.log('开始执行build脚本');
-    await run_build(`/home/${projectName}`, version);
+    await run_build(dirUrlMap[projectName], version);
     // 判断scripts文件夹内时候有对应项目的脚本
     const scriptsFiles = await read_dir('./scripts');
     const scripts = scriptsFiles.map((file) => {
