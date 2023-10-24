@@ -15,8 +15,8 @@ const bucketManage = new qiniu.rs.BucketManager(mac, config);
 const formUploader = new qiniu.form_up.FormUploader(config);
 // 文件上传
 
-const upload = (path, key) => {
-  const putExtra = new qiniu.form_up.PutExtra();
+const upload = (path, key, mimetype) => {
+  const putExtra = new qiniu.form_up.PutExtra(key, {}, mimetype);
   formUploader.putFile(
     uploadToken,
     "_nuxt/" + key,
@@ -68,8 +68,12 @@ const main = (path) => {
     // 判断是否为文件夹
     const isDir = fs.statSync(path + "/" + file).isDirectory();
     if (!isDir) {
+      // 文件后缀
+      const extname = file.split(".").pop();
+      // 只会上传js和css文件
+      const mimetype = extname === "js" ? "text/javascript" : "text/css";
       // 上传文件
-      upload(path + "/" + file, file);
+      upload(path + "/" + file, file, mimetype);
     } else {
       // 递归
       main(path + "/" + file);
