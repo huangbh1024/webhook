@@ -13,10 +13,10 @@ config.zone = qiniu.zone.Zone_z2;
 const bucketManage = new qiniu.rs.BucketManager(mac, config);
 
 const formUploader = new qiniu.form_up.FormUploader(config);
-const putExtra = new qiniu.form_up.PutExtra();
 // 文件上传
 
 const upload = (path, key) => {
+  const putExtra = new qiniu.form_up.PutExtra();
   formUploader.putFile(
     uploadToken,
     "_nuxt/" + key,
@@ -37,8 +37,8 @@ const upload = (path, key) => {
 };
 
 // 删除储存桶的文件夹
-const deleteOperations = [];
 const deleteFolder = (path) => {
+  const deleteOperations = [];
   bucketManage.listPrefix(scope, { prefix: path }, (err, result, res) => {
     const { items } = result;
     items.forEach((item) => {
