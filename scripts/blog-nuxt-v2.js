@@ -61,7 +61,7 @@ const deleteFolder = (path) => {
 const basePath = "/www/wwwroot/blog.huangbh.cn/.output/public/_nuxt";
 const fs = require("fs");
 const main = (path) => {
-  deleteFolder("_nuxt");
+  // deleteFolder("_nuxt");
   const files = fs.readdirSync(path);
   // 上传前删除文件
   files.forEach((file) => {
