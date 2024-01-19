@@ -58,7 +58,7 @@ const deleteFolder = (path) => {
   });
 };
 
-const basePath = "/www/wwwroot/blog.huangbh.cn/.output/public/_nuxt";
+const basePath = "/home/blog-nuxt-v2/.output/public/_nuxt";
 const fs = require("fs");
 const main = (path) => {
   // deleteFolder("_nuxt");
