@@ -1,6 +1,6 @@
 const qiniu = require("qiniu");
 // 读取配置文件
-const { accessKey, secretKey, scope } = require("../configs/qiniu").default;
+const { accessKey, secretKey, scope } = require("../configs/qiniu");
 
 // 上传凭证
 const mac = new qiniu.auth.digest.Mac(accessKey, secretKey);

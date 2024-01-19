@@ -12,8 +12,8 @@ const {
 } = require('./utils/index.js');
 
 const dirUrlMap = {
-  'blog-nuxt-v2': '/www/wwwroot/blog.huangbh.cn',
-  'blog-server-v2': '/www/wwwroot/api.huangbh.cn',
+  'blog-nuxt-v2': '/home/blog-nuxt-v2',
+  'blog-server-v2': '/home/blog-server-v2',
   webhook: '/home/webhook',
 };
 
