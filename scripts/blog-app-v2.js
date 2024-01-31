@@ -3,4 +3,4 @@ const { startUpload } = require('../utils/qiniu.js')
 
 const basePath = `${urlMap['blog-app-v2']}/.next/static`;
 
-startUpload('_next/static', basePath)
+startUpload(basePath, '_next')

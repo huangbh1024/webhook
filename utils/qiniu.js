@@ -20,7 +20,7 @@ const upload = (baseFolder, path, key, mimetype) => {
     const putExtra = new qiniu.form_up.PutExtra(key, {}, mimetype);
     formUploader.putFile(
         uploadToken,
-        baseFolder + key,
+        baseFolder + '/' + key,
         path,
         putExtra,
         (respErr, respBody, respInfo) => {
@@ -58,22 +58,23 @@ const deleteFolder = (path) => {
         });
     });
 };
-
+const mimetypeMap = {
+    js: 'text/javascript',
+    css: 'text/css',
+    woff2: 'font/woff2',
+    jpg: 'image/jpeg'
+}
 const startUpload = (basePath, baseFolder) => {
     const files = fs.readdirSync(basePath);
     files.forEach((file) => {
         // 判断是否为文件夹
         const isDir = fs.statSync(basePath + "/" + file).isDirectory();
-        if (!isDir) {
-            // 文件后缀
-            const extname = file.split(".").pop();
-            // 只会上传js和css文件
-            const mimetype = extname === "js" ? "text/javascript" : "text/css";
-            // 上传文件
-            upload(baseFolder, basePath + "/" + file, file, mimetype);
+        if (isDir) {
+            startUpload(basePath + '/' + file, baseFolder + "/" + file)
         } else {
-            // 递归
-            startUpload(basePath + "/" + file);
+            const extname = file.split(".").pop();
+            const mimetype = mimetypeMap[extname] ?? "text/javascript"
+            upload(baseFolder, basePath + "/" + file, file, mimetype);
         }
     });
 }
