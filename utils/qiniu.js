@@ -39,24 +39,28 @@ const upload = (baseFolder, path, key, mimetype) => {
 
 // 删除储存桶的文件夹
 const deleteFolder = (path) => {
-    const deleteOperations = [];
-    bucketManage.listPrefix(scope, { prefix: path }, (err, result, res) => {
-        const { items } = result;
-        items.forEach((item) => {
-            deleteOperations.push(qiniu.rs.deleteOp(scope, item.key));
+    return new Promise((resolve, reject) => {
+        const deleteOperations = [];
+        bucketManage.listPrefix(scope, { prefix: path }, (err, result, res) => {
+            const { items } = result;
+            items.forEach((item) => {
+                deleteOperations.push(qiniu.rs.deleteOp(scope, item.key));
+            });
+            bucketManage.batch(deleteOperations, (err, respBody, respInfo) => {
+                if (err) {
+                    throw err;
+                }
+                if (respInfo.statusCode == 200) {
+                    resolve(true)
+                } else {
+                    console.log(respInfo.statusCode);
+                    console.log(respBody);
+                    reject(false)
+                }
+            });
         });
-        bucketManage.batch(deleteOperations, (err, respBody, respInfo) => {
-            if (err) {
-                throw err;
-            }
-            if (respInfo.statusCode == 200) {
-                console.log(respBody);
-            } else {
-                console.log(respInfo.statusCode);
-                console.log(respBody);
-            }
-        });
-    });
+    })
+    
 };
 const mimetypeMap = {
     js: 'text/javascript',
@@ -79,4 +83,4 @@ const startUpload = (basePath, baseFolder) => {
     });
 }
 
-module.exports = { startUpload }
+module.exports = { startUpload, deleteFolder }
