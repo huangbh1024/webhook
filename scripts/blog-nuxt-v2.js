@@ -1,6 +1,7 @@
 const qiniu = require("qiniu");
 // 读取配置文件
 const { accessKey, secretKey, scope } = require("../configs/qiniu");
+const { urlMap } = require('../utils/urlMap.js')
 
 // 上传凭证
 const mac = new qiniu.auth.digest.Mac(accessKey, secretKey);
@@ -58,7 +59,7 @@ const deleteFolder = (path) => {
   });
 };
 
-const basePath = "/home/blog-nuxt-v2/.output/public/_nuxt";
+const basePath = `${urlMap['blog-nuxt-v2']}/.output/public/_nuxt`;
 const fs = require("fs");
 const main = (path) => {
   // deleteFolder("_nuxt");
