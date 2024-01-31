@@ -46,7 +46,7 @@ const deleteFolder = (path) => {
             items.forEach((item) => {
                 deleteOperations.push(qiniu.rs.deleteOp(scope, item.key));
             });
-            bucketManage.batch(deleteOperations, (err, respBody, respInfo) => {
+            deleteOperations.length ? bucketManage.batch(deleteOperations, (err, respBody, respInfo) => {
                 if (err) {
                     throw err;
                 }
@@ -57,10 +57,10 @@ const deleteFolder = (path) => {
                     console.log(respBody);
                     reject(false)
                 }
-            });
+            }) : resolve(true)
         });
     })
-    
+
 };
 const mimetypeMap = {
     js: 'text/javascript',
